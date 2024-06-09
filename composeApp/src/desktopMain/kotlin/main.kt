@@ -2,8 +2,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.getValue
@@ -26,72 +28,79 @@ import org.jetbrains.compose.resources.stringResource
 import ui.theme.AppTheme
 
 fun main() = application {
-	var isOpen by remember { mutableStateOf(true) }
-	val windowState = rememberWindowState(
-		size = DpSize(1080.dp, 750.dp),
-	)
+    var isOpen by remember { mutableStateOf(true) }
+    val windowState = rememberWindowState(
+        size = DpSize(1080.dp, 750.dp),
+    )
 
-	if (isOpen) {
-		val trayState = rememberTrayState()
+    if (isOpen) {
+        val trayState = rememberTrayState()
 
-		Tray(
-			state = trayState,
-			//TODO: Change icon
-			icon = painterResource(Res.drawable.musaki),
-			menu = {
-				Item(
-					"Exit",
-					onClick = {
-						isOpen = false
-					}
-				)
-			}
-		)
+        Tray(
+            state = trayState,
+            //TODO: Change icon
+            icon = painterResource(Res.drawable.musaki),
+            menu = {
+                Item(
+                    "Exit",
+                    onClick = {
+                        isOpen = false
+                    }
+                )
+            }
+        )
 
-		Window(
-			state = windowState,
-			icon = painterResource(Res.drawable.musaki),
-			onCloseRequest = ::exitApplication,
-			title = stringResource(Res.string.app_name),
-			undecorated = true
-		) {
-			AppTheme {
-				Scaffold(
-					bottomBar = { MusakiBottomBar() },
-				) {
-					Row(
-						modifier = Modifier
-							.fillMaxSize()
-							.background(MaterialTheme.colorScheme.primaryContainer)
-					) {
-						Column(
-							modifier = Modifier
-								.weight(.2f)
-						) {
-							MusakiSideBar()
-						}
+        Window(
+            state = windowState,
+            icon = painterResource(Res.drawable.musaki),
+            onCloseRequest = ::exitApplication,
+            title = stringResource(Res.string.app_name),
+            transparent = true,
+            undecorated = true
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                AppTheme {
+                    Scaffold(
+                        bottomBar = { MusakiBottomBar() },
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.primaryContainer)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .weight(.2f)
+                            ) {
+                                MusakiSideBar()
+                            }
 
-						VerticalDivider()
+                            VerticalDivider()
 
-						Column(
-							modifier = Modifier
-								.weight(.8f)
-						) {
-							WindowDraggableArea {
-								MusakiTopBar(
-									onClose = ::exitApplication,
-									onMinimize = { windowState.isMinimized = windowState.isMinimized.not() },
-									onMaximize = {
-										windowState.placement = if (windowState.placement == WindowPlacement.Maximized)
-											WindowPlacement.Floating else WindowPlacement.Maximized
-									}
-								)
-							}
-							MusakiPage()
-						}
-					}
-				}
-			}
-		}
-	}
+                            Column(
+                                modifier = Modifier
+                                    .weight(.8f)
+                            ) {
+                                WindowDraggableArea {
+                                    MusakiTopBar(
+                                        onClose = ::exitApplication,
+                                        onMinimize = { windowState.isMinimized = windowState.isMinimized.not() },
+                                        onMaximize = {
+                                            windowState.placement =
+                                                if (windowState.placement == WindowPlacement.Maximized)
+                                                    WindowPlacement.Floating else WindowPlacement.Maximized
+                                        }
+                                    )
+                                }
+                                MusakiPage()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
