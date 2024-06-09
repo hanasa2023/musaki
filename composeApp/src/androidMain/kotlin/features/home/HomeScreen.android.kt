@@ -4,8 +4,12 @@ import androidx.compose.runtime.Composable
 
 
 @Composable
-expect fun HomeScreenUi(
+actual fun HomeScreenUi(
+//	state: MusakiState,
 	onClose: () -> Unit,
 	onMinimize: () -> Unit,
-	onMaximize: () -> Unit
-)
+	onMaximize: () -> Unit,
+) {
+}
+
+//actual interface MusakiState

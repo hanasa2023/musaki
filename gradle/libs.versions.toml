@@ -10,13 +10,20 @@ androidx-core-ktx = "1.13.1"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.1.5"
+animation = "1.6.7"
 compose-plugin = "1.6.10"
 junit = "4.13.2"
 kotlin = "2.0.0"
+lifecycleRuntimeKtx = "2.8.1"
 lifecycleViewmodelCompose = "2.8.0"
-material3 = "1.2.1"
+material3 = "1.6.2"
+navigationCompose = "2.7.0-alpha07"
+uiDesktop = "1.6.2"
+androidx-uiDesktop = "1.6.7"
 
 [libraries]
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,7 +35,10 @@ androidx-material = { group = "com.google.android.material", name = "material", 
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+ui-desktop = { module = "org.jetbrains.compose.ui:ui-desktop", version.ref = "uiDesktop" }
+androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "androidx-uiDesktop" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

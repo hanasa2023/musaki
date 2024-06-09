@@ -1,24 +1,25 @@
 package features.home.components.searchbar
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import features.home.components.utils.MusakiIconButton
 import musaki.composeapp.generated.resources.Res
 import musaki.composeapp.generated.resources.arrow_back
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MusakiSearchBarUi(
@@ -38,23 +39,15 @@ fun MusakiSearchBar(
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { /*TODO*/ }
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.arrow_back),
+            MusakiIconButton(
+                resource = Res.drawable.arrow_back,
                 contentDescription = "back to previous screen"
             )
-        }
 
         BasicTextField(
             value = text,
             onValueChange = { text = it },
+            maxLines = 1,
             modifier = Modifier
                 .width(240.dp)
                 .padding(horizontal = 4.dp, vertical = 8.dp),

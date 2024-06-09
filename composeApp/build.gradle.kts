@@ -40,12 +40,13 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+//            implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.compose.material3)
+            implementation(libs.navigation.compose)
+            implementation(libs.material3)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
