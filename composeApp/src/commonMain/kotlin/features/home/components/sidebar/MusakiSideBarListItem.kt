@@ -18,33 +18,33 @@ import ui.theme.IconSpacer
 
 @Composable
 fun MusakiSideBarListItem(
-	resource: DrawableResource,
-	title: String,
-	onClick: () -> Unit = {}
+    resource: DrawableResource,
+    title: String,
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.height(40.dp)
-			.clip(RoundedCornerShape(8.dp))
-			.clickable { onClick() }
-			.padding(horizontal = 16.dp)
-		,
-		verticalAlignment = Alignment.CenterVertically
-	) {
-		Icon(
-			painter = painterResource(resource),
-			tint = Color.Red,
-			contentDescription = null,
-			modifier = Modifier
-				.size(20.dp)
-		)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(resource),
+            tint = Color.Red,
+            contentDescription = null,
+            modifier = Modifier
+                .size(20.dp)
+        )
 
-		IconSpacer()
+        IconSpacer()
 
-		Text(
-			text = title,
-			fontSize = 12.sp
-		)
-	}
+        Text(
+            text = title,
+            fontSize = 12.sp
+        )
+    }
 }

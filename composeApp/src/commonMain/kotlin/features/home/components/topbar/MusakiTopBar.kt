@@ -24,86 +24,83 @@ import ui.theme.IconSpacer
 
 @Composable
 fun MusakiTopBar(
-	onClose: () -> Unit,
-	onMinimize: () -> Unit,
-	onMaximize: () -> Unit
+    onClose: () -> Unit,
+    onMinimize: () -> Unit,
+    onMaximize: () -> Unit
 ) {
-	Row(
-		modifier = Modifier
-			.height(60.dp)
-			.fillMaxWidth()
-			.padding(horizontal = 32.dp),
-		horizontalArrangement = Arrangement.SpaceBetween,
-		verticalAlignment = Alignment.CenterVertically
-	) {
-		MusakiSearchBarUi()
-		Row(verticalAlignment = Alignment.CenterVertically) {
-			//User info
-			Row(verticalAlignment = Alignment.CenterVertically) {
-				Image(
-					painter = painterResource(Res.drawable.knd),
-					contentDescription = "avatar",
-					contentScale = ContentScale.Crop,
-					modifier = Modifier
-						.padding(horizontal = 8.dp)
-						.size(40.dp)
-						.border(
-							1.dp,
-							Color.Cyan,
-							CircleShape
-						)
-						.clip(CircleShape)
-				)
+    Row(
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MusakiSearchBarUi()
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            //User info
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(Res.drawable.knd),
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(40.dp)
+                        .border(
+                            1.dp,
+                            Color.Cyan,
+                            CircleShape
+                        )
+                        .clip(CircleShape)
+                )
 
-				Text(
-					text = "hanasaki",
-					fontSize = 16.sp
-				)
-			}
+                Text(
+                    text = "hanasaki",
+                    fontSize = 16.sp
+                )
+            }
 
-			IconSpacer()
+            IconSpacer()
 
-			Row {
-				MusakiIconButton(
-					resource = Icons.Filled.Settings,
-					contentDescription = null,
-				)
-			}
+            Row {
+                MusakiIconButton(
+                    resource = Icons.Filled.Settings,
+                    contentDescription = null,
+                )
+            }
 
-			IconSpacer()
+            IconSpacer()
 
-			VerticalDivider(
-				modifier = Modifier.fillMaxHeight(.4f),
-				color = Color.Gray
-			)
+            VerticalDivider(modifier = Modifier.fillMaxHeight(.4f))
 
-			IconSpacer()
+            IconSpacer()
 
-			Row(
-				horizontalArrangement = Arrangement.SpaceAround
-			) {
-				MusakiIconButton(
-					resource = Res.drawable.remove,
-					contentDescription = null,
-					onClick = onMinimize
-				)
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                MusakiIconButton(
+                    resource = Res.drawable.remove,
+                    contentDescription = null,
+                    onClick = onMinimize
+                )
 
-				IconSpacer()
+                IconSpacer()
 
-				MusakiIconButton(
-					resource = Res.drawable.crop_7_5,
-					contentDescription = null,
-					onClick = onMaximize
-				)
+                MusakiIconButton(
+                    resource = Res.drawable.crop_7_5,
+                    contentDescription = null,
+                    onClick = onMaximize
+                )
 
-				IconSpacer()
+                IconSpacer()
 
-				MusakiIconButton(
-					resource = Res.drawable.close,
-					contentDescription = null,
-					onClick = onClose
-				)
-			}
-		}
-	}
+                MusakiIconButton(
+                    resource = Res.drawable.close,
+                    contentDescription = null,
+                    onClick = onClose
+                )
+            }
+        }
+    }
 }
