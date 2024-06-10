@@ -2,13 +2,14 @@ package features.home.components.topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import features.home.components.searchbar.MusakiSearchBarUi
 import features.home.components.utils.MusakiIconButton
+import features.login.LoginScreen
 import musaki.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import ui.theme.IconSpacer
@@ -28,6 +30,8 @@ fun MusakiTopBar(
     onMinimize: () -> Unit,
     onMaximize: () -> Unit
 ) {
+    var isOpenLoginScreen by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .height(60.dp)
@@ -53,6 +57,7 @@ fun MusakiTopBar(
                             CircleShape
                         )
                         .clip(CircleShape)
+                        .clickable { isOpenLoginScreen = true }
                 )
 
                 Text(
@@ -103,4 +108,9 @@ fun MusakiTopBar(
             }
         }
     }
+
+    if (isOpenLoginScreen)
+        LoginScreen {
+            isOpenLoginScreen = false
+        }
 }
