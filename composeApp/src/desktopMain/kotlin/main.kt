@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import features.home.components.MusakiPage
 import features.home.components.bottombar.MusakiBottomBar
 import features.home.components.sidebar.MusakiSideBar
 import features.home.components.topbar.MusakiTopBar
+import features.pages.utils.*
 import musaki.composeapp.generated.resources.Res
 import musaki.composeapp.generated.resources.app_name
 import musaki.composeapp.generated.resources.musaki
@@ -93,7 +94,16 @@ fun main() = application {
                                     }
                                 )
                             }
-                            MusakiPage()
+                            NavHost(navController, startDestination = EXPLORE_ROUTE) {
+                                homeScreen()
+                                exploreScreen()
+                                radioScreen()
+                                recentAddScreen()
+                                artistsScreen()
+                                albumsScreen()
+                                songsScreen()
+                                recommendationsScreen()
+                            }
                         }
                     }
                 }

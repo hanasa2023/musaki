@@ -1,8 +1,7 @@
-package features.home.components
+package features.pages.songsPage
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun MusakiPage() {
-
+fun MusakiSongsPage() {
 }
