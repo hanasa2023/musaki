@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,8 @@ actual fun LoginScreen(
 ) {
     val loginNavController = rememberNavController()
     val dialogState = rememberDialogState(size = DpSize(400.dp, 600.dp))
-    val qrResource = loginViewModel.qRCodeResource.value
+    val qrResource = loginViewModel.qRCodeResource.collectAsState().value
+    val loginCode = loginViewModel.loginCode.collectAsState().value
 
     DialogWindow(
         title = "codeLogin",
@@ -56,7 +58,10 @@ actual fun LoginScreen(
                         navController = loginNavController,
                         onClose = onClose,
                         qrResource = qrResource,
-                        onScanner = { loginViewModel.onScanner() }
+                        loginCode = loginCode,
+                        init = { loginViewModel.startCodeTimer() },
+                        onRefreshCode = { loginViewModel.refreshQRCode() },
+                        stopTimer = { loginViewModel.stopTimer() }
                     )
                 }
             }

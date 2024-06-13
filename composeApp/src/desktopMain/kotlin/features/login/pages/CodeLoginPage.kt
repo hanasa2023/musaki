@@ -4,32 +4,54 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
+import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.WindowScope
 import androidx.navigation.NavController
 import features.home.components.utils.MusakiIconButtonBig
 import features.login.components.base64Image.Base64Image
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import musaki.composeapp.generated.resources.Res
 import musaki.composeapp.generated.resources.close
 import musaki.composeapp.generated.resources.musaki
+import musaki.composeapp.generated.resources.refresh
 import org.jetbrains.compose.resources.painterResource
 
-//TODO:进一步提升状态,确保CodeLogin的数据源唯一（遵循单一可信数据来源）
-//比如此处的onClose 与 onScanner来自两个不用的数据来源，这会使该可组合项的操作变得极为麻烦
 @Composable
 fun WindowScope.CodeLogin(
     navController: NavController,
     onClose: () -> Unit,
     qrResource: String,
-    onScanner: () -> Unit
+    loginCode: Int,
+    onRefreshCode: suspend () -> Unit,
+    stopTimer: () -> Unit,
+    init: suspend () -> Unit
 ) {
+    LaunchedEffect(loginCode) {
+        when (loginCode) {
+            803 -> {
+                stopTimer()
+                onClose()
+            }
+
+            0 -> init()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +69,10 @@ fun WindowScope.CodeLogin(
                 MusakiIconButtonBig(
                     resource = Res.drawable.close,
                     contentDescription = null,
-                    onClick = onClose
+                    onClick = {
+                        stopTimer()
+                        onClose()
+                    }
                 )
             }
         }
@@ -64,12 +89,37 @@ fun WindowScope.CodeLogin(
 
             Spacer(modifier = Modifier.height(32.dp))
             //显示二维码
-            if (qrResource.isNotEmpty())
-                Base64Image(
-                    resource = qrResource,
-                    modifier = Modifier.size(200.dp)
-                )
-            else
+            if (qrResource.isNotEmpty()) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (loginCode == 800) {
+                        Base64Image(
+                            resource = qrResource,
+                            modifier = Modifier.size(200.dp),
+                            colorFilter = ColorFilter.tint(Color.Gray, BlendMode.Modulate)
+                        )
+                        IconButton(
+                            onClick = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    onRefreshCode()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.refresh),
+                                contentDescription = null,
+                                tint = Color.Cyan,
+                                modifier = Modifier.size(80.dp)
+                            )
+                        }
+                    } else
+                        Base64Image(
+                            resource = qrResource,
+                            modifier = Modifier.size(200.dp),
+                        )
+                }
+            } else
                 Image(
                     painter = painterResource(Res.drawable.musaki),
                     contentDescription = null,

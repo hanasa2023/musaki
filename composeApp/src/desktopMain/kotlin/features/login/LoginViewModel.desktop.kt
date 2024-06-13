@@ -10,19 +10,21 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 actual class LoginViewModel : ViewModel() {
-    actual val account = MutableStateFlow("")
+    actual val phone = MutableStateFlow("")
     actual val password = MutableStateFlow("")
     actual val qRCodeResource = MutableStateFlow("")
-    private val _isScanner = MutableStateFlow(false)
+    actual val loginCode = MutableStateFlow(0)
     private val _qrKey = MutableStateFlow("")
     private val _cookie = MutableStateFlow("")
+    private lateinit var _timer: Timer
+    private lateinit var _scope: CoroutineScope
 
     actual val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -32,53 +34,75 @@ actual class LoginViewModel : ViewModel() {
         }
     }
 
-    //TODO:这里有一个bug，当第一次打开扫码登录时协程会报错
-    init {
-        Timer().scheduleAtFixedRate(0, 120_000) {
-            runBlocking {
-                getQRCode()
-                checkLogin()
-            }
-        }
-    }
-
     actual fun updateAccount(newAccount: String) {
-        account.value = newAccount
+        phone.value = newAccount
     }
 
     actual fun updatePassword(newPassword: String) {
         password.value = newPassword
     }
 
-    actual suspend fun getQRCode() {
+    suspend fun startCodeTimer() {
+        _timer = Timer()
+        _scope = CoroutineScope(Dispatchers.IO + Job())
+        _scope.launch { async { refreshQRCode() }.await() }
+        _timer.scheduleAtFixedRate(0, 1000) {
+            _scope.launch {
+                checkQRLogin()
+            }
+        }
+    }
+
+    fun stopTimer() {
+        _timer.cancel()
+        _scope.cancel()
+    }
+
+    actual suspend fun refreshQRCode() {
         try {
             client.get("$BASE_URL/login/qr/key").body<QRKey>().data?.uniKey?.let { _qrKey.value = it }
-            println(_qrKey)
+            println(_qrKey.value)
             val timeStamp = System.currentTimeMillis()
             val qrCode =
-                client.get("$BASE_URL/login/qr/create?key=$_qrKey&qrimg=true&timestamp=${timeStamp}")
+                client.get("$BASE_URL/login/qr/create?key=${_qrKey.value}&qrimg=true&timestamp=${timeStamp}")
                     .body<QRCode>()
             qrCode.data?.let { qRCodeResource.value = it.qrImg.split(",")[1] }
+            println(qRCodeResource.value)
         } catch (_: Exception) {
         }
     }
 
-    fun onScanner() {
-        _isScanner.value = false
-    }
-
-    private suspend fun checkLogin() {
+    private suspend fun checkQRLogin() {
         try {
             val timeStamp = System.currentTimeMillis()
-            val res = client.get("$BASE_URL/login/qr/check?key=$_qrKey&timestamp=$timeStamp").body<LoginCheck>()
-            res.cookie?.let {
-                if (it.isNotEmpty()) {
-                    _isScanner.value = true
-                    _cookie.value = it
-                    println(_cookie)
+            val res = client.get("$BASE_URL/login/qr/check?key=${_qrKey.value}&timestamp=$timeStamp").body<LoginCheck>()
+            loginCode.value = res.code
+            when (res.code) {
+                800 -> {
+//                    println("800")
                 }
+
+                801 -> {
+//                    println("801")
+                }
+
+                802 -> {}
+                803 -> {
+                    res.cookie?.let {
+                        _cookie.value = it
+                        println(_cookie.value)
+                    }
+                    stopTimer()
+                }
+
+                502 -> {}
             }
         } catch (_: Exception) {
         }
+    }
+
+    suspend fun onLogin() {
+        val timeStamp = System.currentTimeMillis()
+        client.get("$BASE_URL/login/cellphone?phone=${phone.value}&password=${password.value}&timestamp=$timeStamp")
     }
 }
