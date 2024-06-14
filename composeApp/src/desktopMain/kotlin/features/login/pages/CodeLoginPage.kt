@@ -131,6 +131,7 @@ fun WindowScope.CodeLogin(
             TextButton(
                 onClick = {
                     navController.navigate("phoneLogin") {
+                        stopTimer()
                         navController.graph.startDestinationRoute?.let { popUpTo(it) }
                         launchSingleTop = true
                     }

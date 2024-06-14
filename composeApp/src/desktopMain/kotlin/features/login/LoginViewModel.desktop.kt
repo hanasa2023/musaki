@@ -2,6 +2,7 @@ package features.login
 
 import androidx.lifecycle.ViewModel
 import features.login.models.LoginCheck
+import features.login.models.PhoneLoginData
 import features.login.models.QRCode
 import features.login.models.QRKey
 import io.ktor.client.*
@@ -21,6 +22,8 @@ actual class LoginViewModel : ViewModel() {
     actual val password = MutableStateFlow("")
     actual val qRCodeResource = MutableStateFlow("")
     actual val loginCode = MutableStateFlow(0)
+    val phoneLoginCode = MutableStateFlow(502)
+    val autoLogin = MutableStateFlow(false)
     private val _qrKey = MutableStateFlow("")
     private val _cookie = MutableStateFlow("")
     private lateinit var _timer: Timer
@@ -103,6 +106,23 @@ actual class LoginViewModel : ViewModel() {
 
     suspend fun onLogin() {
         val timeStamp = System.currentTimeMillis()
-        client.get("$BASE_URL/login/cellphone?phone=${phone.value}&password=${password.value}&timestamp=$timeStamp")
+        val res = client.get(
+            "$BASE_URL/login/cellphone?phone=${phone.value}&password=${password.value}&timestamp=$timeStamp"
+        ).body<PhoneLoginData>()
+        println(res)
+        when (res.code) {
+            200 -> {
+                res.cookie?.let { _cookie.value = it }
+                phoneLoginCode.value = res.code
+            }
+
+            502 -> {
+                //TODO:账号密码错误，抛出提示
+            }
+        }
+    }
+
+    fun updateAutoLoginState(isAutoLogin: Boolean) {
+        autoLogin.value = isAutoLogin
     }
 }

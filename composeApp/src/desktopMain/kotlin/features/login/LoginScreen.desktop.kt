@@ -29,6 +29,8 @@ actual fun LoginScreen(
     val dialogState = rememberDialogState(size = DpSize(400.dp, 600.dp))
     val qrResource = loginViewModel.qRCodeResource.collectAsState().value
     val loginCode = loginViewModel.loginCode.collectAsState().value
+    val phoneLoginCode = loginViewModel.phoneLoginCode.collectAsState().value
+    val autoLogin = loginViewModel.autoLogin.collectAsState().value
 
     DialogWindow(
         title = "codeLogin",
@@ -48,7 +50,11 @@ actual fun LoginScreen(
                 composable("phoneLogin") {
                     PhoneLogin(
                         navController = loginNavController,
+                        phoneLoginCode = phoneLoginCode,
+                        autoLogin = autoLogin,
+                        updateAutoLoginState = { loginViewModel.updateAutoLoginState(it) },
                         onClose = onClose,
+                        onLogin = { loginViewModel.onLogin() },
                         onAccountChange = { loginViewModel.updateAccount(it) },
                         onPasswordChange = { loginViewModel.updatePassword(it) }
                     )
