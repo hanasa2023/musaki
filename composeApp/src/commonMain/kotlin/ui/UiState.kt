@@ -12,7 +12,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import ui.models.AnonimousResult
+import network.vo.AnonimousResult
 
 data class UiState(
 	var cookie: String,

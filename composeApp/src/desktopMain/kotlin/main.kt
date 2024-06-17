@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import musaki.composeapp.generated.resources.Res
@@ -23,7 +22,6 @@ import musaki.composeapp.generated.resources.app_name
 import musaki.composeapp.generated.resources.musaki
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ui.MusakiViewModel
 import ui.home.components.bottombar.MusakiBottomBar
 import ui.home.components.sidebar.MusakiSideBar
 import ui.home.components.topbar.MusakiTopBar
@@ -31,7 +29,7 @@ import ui.pages.utils.*
 import ui.theme.AppTheme
 
 fun main() = application {
-    var uiState: MusakiViewModel = viewModel()
+//    var uiState: MusakiViewModel = viewModel()
     var isOpen by remember { mutableStateOf(true) }
     val windowState = rememberWindowState(
         size = DpSize(1080.dp, 750.dp),

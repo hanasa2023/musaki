@@ -1,4 +1,4 @@
-package ui.models
+package network.vo
 
 import kotlinx.serialization.Serializable
 

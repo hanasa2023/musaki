@@ -1,5 +1,6 @@
 [versions]
 agp = "8.2.0"
+coilCompose = "2.6.0"
 ktor = "2.3.11"
 android-compileSdk = "34"
 android-minSdk = "24"
@@ -25,6 +26,7 @@ androidx-uiDesktop = "1.6.7"
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

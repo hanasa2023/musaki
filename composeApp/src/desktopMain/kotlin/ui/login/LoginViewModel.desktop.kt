@@ -10,10 +10,10 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.Json
-import ui.login.models.LoginCheck
-import ui.login.models.PhoneLoginData
-import ui.login.models.QRCode
-import ui.login.models.QRKey
+import network.vo.LoginCheckResult
+import network.vo.PhoneLoginResult
+import network.vo.QRCodeResult
+import network.vo.QRKeyResult
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -57,12 +57,12 @@ actual class LoginViewModel : ViewModel() {
 
 	actual suspend fun refreshQRCode() {
 		try {
-			client.get("$BASE_URL/login/qr/key").body<QRKey>().data?.uniKey?.let { _qrKey.value = it }
+			client.get("$BASE_URL/login/qr/key").body<QRKeyResult>().data?.uniKey?.let { _qrKey.value = it }
 			println(_qrKey.value)
 			val timeStamp = System.currentTimeMillis()
 			val qrCode =
 				client.get("$BASE_URL/login/qr/create?key=${_qrKey.value}&qrimg=true&timestamp=${timeStamp}")
-					.body<QRCode>()
+					.body<QRCodeResult>()
 			qrCode.data?.let { qRCodeResource.value = it.qrImg.split(",")[1] }
 			println(qRCodeResource.value)
 		} catch (_: Exception) {
@@ -72,7 +72,7 @@ actual class LoginViewModel : ViewModel() {
 	private suspend fun checkQRLogin() {
 		try {
 			val timeStamp = System.currentTimeMillis()
-			val res = client.get("$BASE_URL/login/qr/check?key=${_qrKey.value}&timestamp=$timeStamp").body<LoginCheck>()
+			val res = client.get("$BASE_URL/login/qr/check?key=${_qrKey.value}&timestamp=$timeStamp").body<LoginCheckResult>()
 			loginCode.value = res.code
 			when (res.code) {
 				800 -> {
@@ -102,7 +102,7 @@ actual class LoginViewModel : ViewModel() {
 		val timeStamp = System.currentTimeMillis()
 		val res = client.get(
 			"$BASE_URL/login/cellphone?phone=$phone&password=$password&timestamp=$timeStamp"
-		).body<PhoneLoginData>()
+		).body<PhoneLoginResult>()
 		println(res)
 		phoneLoginCode.value = res.code
 		res.cookie?.let { _cookie.value = it }
@@ -111,7 +111,7 @@ actual class LoginViewModel : ViewModel() {
 	suspend fun onVerLogin(phone: String, verificationCode: String) {
 		val timeStamp = System.currentTimeMillis()
 		val res = client.get("$BASE_URL/login/cellphone?phone=$phone&captcha=$verificationCode&timestamp=$timeStamp")
-			.body<PhoneLoginData>()
+			.body<PhoneLoginResult>()
 		println(res)
 		phoneLoginCode.value = res.code
 		res.cookie?.let { _cookie.value = it }
